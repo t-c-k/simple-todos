@@ -19,7 +19,7 @@ if (Meteor.isServer) {
 
 
 Meteor.methods({
-  'tasks.insert'(text) {
+  'tasks.insert'({ text, dueAt }) {
     check(text, String);
 
     // Make sure the user is logged in before inserting a task
@@ -29,6 +29,7 @@ Meteor.methods({
 
     Tasks.insert({
       text,
+      dueAt,
       createdAt: new Date(),
       owner: Meteor.userId(),
       username: Meteor.user().username
