@@ -42,23 +42,24 @@ h1 {
   margin-right: 1em;
 }
 
-form {
-  margin-top: 10px;
-  margin-bottom: -10px;
-  position: relative;
-}
-
 .new-task {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: -10px;
+  margin-top: 10px;
+  position: relative;
 }
 
-.new-task input {
+input {
   box-sizing: border-box;
   padding: 10px 0;
   background: transparent;
   border: none;
   font-size: 1em;
+}
+
+label {
+  padding-right: 4px;
 }
 
 .new-task input:focus{
@@ -74,6 +75,10 @@ form {
   background: none;
   border: 0;
   cursor: pointer;
+}
+
+section {
+  padding: 20px 15px 15px 15px;
 }
 
 ul {

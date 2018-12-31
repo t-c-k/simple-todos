@@ -12,19 +12,33 @@ Template.body.onCreated(function bodyOnCreated() {
   Meteor.subscribe('tasks');
 });
 
+function dueAtFilter() {
+  const { start, end } = Template.instance().state.get('filterDate') || {},
+        filter = {};
+
+  if (start) { filter['$gte'] = start; }
+  if (end) { filter['$lte'] = end; }
+
+  return filter;
+}
+
 Template.body.helpers({
   tasks() {
     const instance = Template.instance(),
           sort = { dueAt: 1, createdAt: -1 };
 
+    const dueAt = dueAtFilter();
+
     if (instance.state.get('hideCompleted')) {
-      return Tasks.find({ checked: { $ne: true } }, { sort });
+      return Tasks.find({ checked: { $ne: true }, dueAt }, { sort });
     }
 
-    return Tasks.find({}, { sort });
+    return Tasks.find({ dueAt }, { sort });
   },
   incompleteCount() {
-    return Tasks.find({ checked: { $ne: true } }).count();
+    const dueAt = dueAtFilter();
+
+    return Tasks.find({ checked: { $ne: true }, dueAt }).count();
   }
 });
 
@@ -36,10 +50,7 @@ Template.body.events({
     // Get value from form element
     const target = event.target,
           text   = target.text.value,
-          dueAt    = target.due.value;
-
-    // Don't add task if text is empty
-    if (!text) { return; }
+          dueAt  = new Date(target.due.value);
 
     // Insert a task into the collection
     Meteor.call('tasks.insert', { text, dueAt });
@@ -50,5 +61,21 @@ Template.body.events({
   },
   'change .hide-completed input'(event, instance) {
     instance.state.set('hideCompleted', event.target.checked);
+  },
+  'change .filter input'(event, instance) {
+    // Prevent default browser form submit
+    event.preventDefault();
+
+    // Get value from form element
+    const { name, value } = event.target,
+          newValue        = value ? new Date(value) : undefined;
+
+    const filter = Object.assign(
+      {},
+      instance.state.get('filterDate'),
+      { [name]: newValue }
+    );
+
+    instance.state.set('filterDate', filter);
   }
 });

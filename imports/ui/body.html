@@ -12,12 +12,21 @@
 
       {{#if currentUser}}
         <form class="new-task">
-          <input type="text" name="text" placeholder="Type to add new tasks" />
-          <input type="date" name="due" />
+          <input type="text" name="text" placeholder="Type to add new tasks" required />
+          <input type="date" name="due" required />
           <button type="submit">✔</button>
         </form>
       {{/if}}
     </header>
+
+    <section>
+      <form class="filter">
+        <label for="start">From:</label>
+        <input type="date" name="start" />
+        <label for="end">To:</label>
+        <input type="date" name="end" />
+      </form>
+    </section>
 
     <ul>
       {{#each tasks}}
