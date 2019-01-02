@@ -23,22 +23,22 @@ function dueAtFilter() {
 }
 
 Template.body.helpers({
-  tasks() {
+  tasksWithStatus(status) {
     const instance = Template.instance(),
           sort = { dueAt: 1, createdAt: -1 };
 
     const dueAt = dueAtFilter();
 
     if (instance.state.get('hideCompleted')) {
-      return Tasks.find({ checked: { $ne: true }, dueAt }, { sort });
+      return Tasks.find({ checked: { $ne: true }, status, dueAt }, { sort });
     }
 
-    return Tasks.find({ dueAt }, { sort });
+    return Tasks.find({ status, dueAt }, { sort });
   },
   incompleteCount() {
     const dueAt = dueAtFilter();
 
-    return Tasks.find({ checked: { $ne: true }, dueAt }).count();
+    return Tasks.find({ status: { $ne: 'done' }, dueAt }).count();
   }
 });
 
@@ -79,3 +79,15 @@ Template.body.events({
     instance.state.set('filterDate', filter);
   }
 });
+
+Template.body.rendered = function() {
+  this.$('.tasks').sortable({
+    connectWith: '.tasks',
+    receive: function(e, ui) {
+      const element = ui.item.get(0),
+            status  = this.getAttribute('status');
+
+      Meteor.call('tasks.setStatus', Blaze.getData(element)._id, status);
+    }
+  });
+};

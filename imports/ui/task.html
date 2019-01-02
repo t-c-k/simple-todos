@@ -2,27 +2,21 @@
   <li class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}">
     <button class="delete">&times;</button>
 
-    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
-
-    {{#if isOwner}}
-      <button class="toggle-private">
-        {{#if private}}
-          Private
-        {{else}}
-          Public
-        {{/if}}
-      </button>
-    {{/if}}
-
+    <div>
+      {{text}}
+    </div>
 
     <div class="info">
-      <div class="text">
-        <strong>{{username}}</strong> - {{text}}
-      </div>
-
-      {{#if dueAt}}
-        <div class="due">Due: {{dueAt}}</div>
-      {{/if}}
+      <small>Due</small>
+      <div class="due">{{dueAtFormatted}}</div>
+      <small>Owner</small>
+      <div class="owner">{{username}}</div>
     </div>
+
+    {{#if isOwner}}
+      <input id="toggle-private-{{_id}}" class="toggle-private" checked={{private}} type="checkbox">
+      <label for="toggle-private-{{_id}}" >Private</label>
+    {{/if}}
+
   </li>
 </template>

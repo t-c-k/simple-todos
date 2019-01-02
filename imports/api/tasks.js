@@ -30,6 +30,7 @@ Meteor.methods({
     Tasks.insert({
       text,
       dueAt,
+      status: 'open',
       createdAt: new Date(),
       owner: Meteor.userId(),
       username: Meteor.user().username
@@ -46,18 +47,6 @@ Meteor.methods({
 
     Tasks.remove(taskId);
   },
-  'tasks.setChecked'(taskId, setChecked) {
-    check(taskId, String);
-    check(setChecked, Boolean);
-
-    const task = Tasks.findOne(taskId);
-    if (task.private && task.owner !== Meteor.userId()) {
-      // If the task is private, make sure only the owner can check it off
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Tasks.update(taskId, { $set: { checked: setChecked } });
-  },
   'tasks.setPrivate'(taskId, setToPrivate) {
     check(taskId, String);
     check(setToPrivate, Boolean);
@@ -71,4 +60,7 @@ Meteor.methods({
 
     Tasks.update(taskId, { $set: { private: setToPrivate } });
   },
+  'tasks.setStatus'(taskId, status) {
+    Tasks.update(taskId, { $set: { status }});
+  }
 });

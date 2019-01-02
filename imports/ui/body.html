@@ -21,17 +21,40 @@
 
     <section>
       <form class="filter">
-        <label for="start">From:</label>
-        <input type="date" name="start" />
-        <label for="end">To:</label>
-        <input type="date" name="end" />
+        <label for="start-date">From:</label>
+        <input id="start-date" type="date" name="start" />
+        <label for="end-date">To:</label>
+        <input id="end-date" type="date" name="end" />
       </form>
     </section>
 
-    <ul>
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-    </ul>
+    <div class="tasks-board">
+      <div>
+        <h3>Open</h3>
+        <ul class="tasks" status="open">
+          {{#each (tasksWithStatus 'open')}}
+            {{> task}}
+          {{/each}}
+        </ul>
+      </div>
+
+      <div>
+        <h3>Pending</h3>
+        <ul class="tasks" status="pending">
+          {{#each (tasksWithStatus 'pending')}}
+            {{> task}}
+          {{/each}}
+        </ul>
+      </div>
+
+      <div>
+        <h3>Done</h3>
+        <ul class="tasks" status="done">
+          {{#each (tasksWithStatus 'done')}}
+            {{> task}}
+          {{/each}}
+        </ul>
+      </div>
+    </div>
   </div>
 </body>
